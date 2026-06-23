@@ -17,6 +17,13 @@ export const contact = {
   // supaya dia bisa menghubungimu kalau jawabannya iya.
   instagram: '_nayan_471',
 
+  // WhatsApp kamu — ditampilkan bersama Instagram di halaman penutup.
+  // Format internasional tanpa "+" dan tanpa "0" depan (untuk link wa.me):
+  //   0812 5725 6680  ->  62 812 5725 6680
+  whatsapp: '6281257206680',
+  // Nomor yang ditampilkan ke layar (boleh dirapikan sesukamu).
+  whatsappDisplay: '0812-5725-6680',
+
   // (OPSIONAL) Access key Web3Forms untuk menerima PILIHAN dia di halaman
   // "Kalau Kita Jadi Kenal" lewat EMAIL secara otomatis.
   // Daftar gratis ~10 detik di https://web3forms.com (cukup masukkan email kamu),
@@ -39,10 +46,10 @@ export const about = {
   heading: 'Kesan Pertama',
   intro: 'Hal-hal kecil yang bikin aku pengin kenalan sama kamu.',
   notes: [
-    { text: 'Kayaknya kamu orangnya asik', color: 'softyellow' },
+    { text: 'kamu orangnya cantik', color: 'softyellow' },
     { text: 'Auranya enak, bikin nyaman', color: 'dusty' },
-    { text: 'Jadi pengin ngobrol', color: 'softblue' },
-    { text: 'Senyummu ramah', color: 'lavender' },
+    { text: 'kamu juga asik', color: 'softblue' },
+    { text: 'kamu keliatan elegan banget', color: 'lavender' },
   ],
 }
 
@@ -71,7 +78,7 @@ export const reasons = {
   intro: 'Beberapa hal yang bikin aku pengin kenalan sama kamu.',
   items: [
     { text: 'Senyummu', detail: 'ramah dan enak dilihat', color: 'dusty' },
-    { text: 'Caramu bawa diri', detail: 'tenang dan asik', color: 'softyellow' },
+    { text: 'Caramu bawa diri', detail: 'tenang dan elegan', color: 'softyellow' },
     { text: 'Kebaikanmu', detail: 'kelihatan dari hal kecil', color: 'softblue' },
     { text: 'Selera & ceritamu', detail: 'pengin tahu lebih banyak', color: 'lavender' },
     { text: 'Caramu ketawa', detail: 'kayaknya seru', color: 'beige' },
@@ -100,7 +107,7 @@ export const hiddenMessage = {
   buttonText: 'Buka Pesan',
   closedHint: 'ada yang pengin kusampaikan...',
   message:
-    'Sejujurnya aku cuma pengin kenalan. Nggak buru-buru, nggak neko-neko — sekadar pengin tahu, mungkin kita bisa jadi teman ngobrol?',
+    'Sejujurnya aku cuma pengen kenalan. Nggak buru-buru — sekadar pengen tau, mungkin kita bisa jadi teman ngobrol?',
 }
 
 // --- HALAMAN PENUTUP ---
@@ -113,7 +120,7 @@ export const closing = {
   yesText: 'Boleh',
   noText: 'Nanti dulu',
   yesReply: 'Asik! Makasih udah mau kenalan.',
-  yesContactHint: 'Sapa aku di Instagram, ya:',
+  yesContactHint: 'Sapa aku di sini, ya:',
   noReply: 'Nggak apa-apa, santai aja. Aku senang udah bisa nyapa kamu.',
 }
 
