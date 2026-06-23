@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #fbf7f1;
+  --ink: #4a4742;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: 'Poppins', system-ui, sans-serif;
+  overflow: hidden; /* tiap halaman mengatur scroll-nya sendiri */
+  background: #efe7db;
+}
+
+/* ===========================================================
+   TEKSTUR KERTAS — semua dibuat dengan CSS, tanpa file gambar
+   =========================================================== */
+
+/* Kertas krem handmade dengan butiran lembut + bercak hangat */
+.paper-cream {
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(circle at 18% 22%, rgba(231, 221, 205, 0.5) 0%, transparent 42%),
+    radial-gradient(circle at 82% 78%, rgba(220, 210, 196, 0.35) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.55) 0%, transparent 70%);
+}
+
+/* Lapisan butiran (grain) — tempel sebagai overlay tipis */
+.grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+}
+
+/* Garis-garis buku catatan (notebook lines) */
+.notebook-lines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 31px,
+    rgba(156, 122, 102, 0.14) 32px
+  );
+}
+
+/* Pola titik-titik (dotted journal) */
+.dotted {
+  background-image: radial-gradient(rgba(107, 93, 79, 0.14) 1.3px, transparent 1.3px);
+  background-size: 22px 22px;
+}
+
+/* Langit malam berbintang untuk halaman penutup */
+.night-sky {
+  background:
+    radial-gradient(1.5px 1.5px at 20% 30%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 60% 70%, #fff, transparent),
+    radial-gradient(1px 1px at 50% 20%, #fef9c3, transparent),
+    radial-gradient(1px 1px at 80% 40%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 35% 80%, #fde68a, transparent),
+    radial-gradient(1px 1px at 90% 85%, #fff, transparent),
+    radial-gradient(2px 2px at 10% 60%, #fff, transparent),
+    linear-gradient(180deg, #1e1b4b 0%, #312e81 45%, #4c1d6e 100%);
+  background-repeat: no-repeat;
+}
+
+/* ===========================================================
+   UTILITAS KECIL
+   =========================================================== */
+
+/* Scrollbar lembut */
+.soft-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.soft-scroll::-webkit-scrollbar-thumb {
+  background: rgba(156, 122, 102, 0.35);
+  border-radius: 999px;
+}
+.soft-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 122, 102, 0.35) transparent;
+}
+
+/* Bayangan judul yang sangat lembut (tidak menonjol) */
+.text-shadow-soft {
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* Hilangkan highlight & seleksi untuk vibe "buku" */
+.no-select {
+  user-select: none;
+}
+
+/* Kursor hati custom (opsional, dipakai di cover) */
+.cursor-heart {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24'%3E%3Cpath fill='%23B76E79' d='M12 21s-7.5-5-9.5-9.5C1 8 3 5 6 5c1.8 0 3 .9 3.7 1.8C10.4 5.9 11.6 5 13.4 5 16 5 18 8 16.5 11.5 14.5 16 12 21 12 21z'/%3E%3C/svg%3E") 14 14, auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
