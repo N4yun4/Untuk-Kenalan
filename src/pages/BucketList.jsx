@@ -5,14 +5,11 @@ import { bucketList, contact, person } from '../data/data'
 
 // Halaman — Kalau Kita Jadi Kenal: checklist interaktif + tombol kirim pilihan.
 //
-// Bagaimana kamu tahu apa yang dia pilih?
-//  1) Kalau contact.web3formsKey diisi -> pilihannya dikirim ke EMAIL kamu otomatis.
-//  2) Selalu (dengan/tanpa key) -> teks pilihannya disalin ke clipboard dan dia
-//     diarahkan untuk mengirimnya ke Instagram kamu (tinggal paste).
+// Pilihan dikirim langsung ke EMAIL (Gmail) kamu lewat Web3Forms
+// (contact.web3formsKey). Tidak ada Instagram di sini.
 export default function BucketList() {
   const [items, setItems] = useState(bucketList.items)
-  const [status, setStatus] = useState('idle') // idle | sending | sent | empty
-  const [copied, setCopied] = useState(false)
+  const [status, setStatus] = useState('idle') // idle | sending | sent | empty | error
 
   const toggle = (i) =>
     setItems((prev) =>
@@ -20,7 +17,6 @@ export default function BucketList() {
     )
 
   const chosen = items.filter((i) => i.done)
-  const igUrl = `https://instagram.com/${contact.instagram}`
 
   const buildMessage = () =>
     `Halo ${person.from}! Ini ${person.name}.\n` +
@@ -32,35 +28,28 @@ export default function BucketList() {
       setStatus('empty')
       return
     }
-    const message = buildMessage()
-
-    // 1) kirim ke email lewat Web3Forms (kalau key tersedia) — fire & forget
-    if (contact.web3formsKey) {
-      try {
-        setStatus('sending')
-        await fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({
-            access_key: contact.web3formsKey,
-            subject: `Pilihan ${person.name} dari scrapbook 💌`,
-            from_name: person.name,
-            message,
-          }),
-        })
-      } catch {
-        // diabaikan — tetap lanjut ke fallback clipboard
-      }
+    if (!contact.web3formsKey) {
+      setStatus('error')
+      return
     }
 
-    // 2) salin ke clipboard supaya gampang di-paste ke DM Instagram
+    setStatus('sending')
     try {
-      await navigator.clipboard.writeText(message)
-      setCopied(true)
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: contact.web3formsKey,
+          subject: `Pilihan ${person.name} dari scrapbook 💌`,
+          from_name: person.name,
+          message: buildMessage(),
+        }),
+      })
+      const data = await res.json().catch(() => ({}))
+      setStatus(res.ok && data.success ? 'sent' : 'error')
     } catch {
-      setCopied(false)
+      setStatus('error')
     }
-    setStatus('sent')
   }
 
   return (
@@ -133,30 +122,22 @@ export default function BucketList() {
                   centang dulu minimal satu, ya
                 </p>
               )}
+              {status === 'error' && (
+                <p className="mt-3 font-body text-sm text-rosegold/90">
+                  yah, gagal mengirim. coba lagi sebentar, ya
+                </p>
+              )}
             </>
           ) : (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-2xl border border-rosegold/20 bg-cream/70 p-5 shadow-paper"
+              className="rounded-2xl border border-rosegold/20 bg-cream/70 p-6 shadow-paper"
             >
-              <p className="font-body font-semibold text-ink">Pilihanmu tersimpan</p>
+              <p className="font-body font-semibold text-ink">Pilihanmu sudah terkirim ✓</p>
               <p className="mt-1 font-body text-sm text-ink/70">
-                {copied
-                  ? `Pilihanmu sudah disalin. Tinggal buka Instagram ${person.from} lalu paste & kirim, ya.`
-                  : `Buka Instagram ${person.from} dan kabari pilihanmu, ya.`}
+                Makasih ya, pilihanmu sudah sampai ke {person.from}. 🤍
               </p>
-              <a
-                href={igUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-4 inline-flex items-center gap-2 rounded-full bg-rosegold px-6 py-2.5 font-body font-medium text-cream shadow-paper transition-colors hover:bg-[#8a6a58]"
-              >
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
-                  <path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.3 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.1.4.3 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.1-1 .3-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.3-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.1-.4-.3-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.1 1-.3 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 3.1A6.7 6.7 0 1 0 18.7 12 6.7 6.7 0 0 0 12 5.3zm0 11a4.3 4.3 0 1 1 4.3-4.3 4.3 4.3 0 0 1-4.3 4.3zm6.9-11.3a1.6 1.6 0 1 1-1.6-1.6 1.6 1.6 0 0 1 1.6 1.6z" />
-                </svg>
-                @{contact.instagram}
-              </a>
             </motion.div>
           )}
         </div>
